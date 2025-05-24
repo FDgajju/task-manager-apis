@@ -1,0 +1,26 @@
+{
+  "name": "task-manager-apis",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "gajendra",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fastify/mongodb": "^9.0.2",
+    "@sinclair/typebox": "^0.34.33",
+    "fastify": "^5.3.3"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@types/mongodb": "^4.0.6",
+    "@types/node": "^22.15.21",
+    "dotenv": "^16.5.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
