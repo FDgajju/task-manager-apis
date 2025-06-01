@@ -25,7 +25,7 @@ import type {
 
 export const taskRouter = (
 	fastify: FastifyInstance,
-	opts: FastifyPluginOptions,
+	_opts: FastifyPluginOptions,
 ) => {
 	fastify.post<{ Body: TaskCreateT }>(
 		"/task",
