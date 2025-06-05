@@ -20,9 +20,10 @@ export const TaskCreateSchema = Type.Object({
   priority: Type.Enum(TaskPriority),
   status: Type.Enum(TaskStatus),
   deadLine: Type.String(),
-
+  
   workspace: Type.Optional(Type.String()),
-
+  dependsOn: Type.Optional(Type.Array(Type.String())),
+  
   createdBy: Type.Optional(Type.String()),
 
   createdAt: Type.Optional(Type.String()),
@@ -38,6 +39,7 @@ export const TaskUpdateSchema = Type.Object({
   assignedTo: Type.Optional(Type.String()),
   attachments: Type.Optional(Type.Array(Type.String())),
   tag: Type.Optional(Type.String()),
+  dependsOn: Type.Optional(Type.Array(Type.String())),
 
   updatedAt: Type.Optional(Type.String()),
 });
@@ -56,6 +58,18 @@ export const TaskQuerySchema = Type.Object({
 
   createdBy: Type.Optional(Type.String()),
   updatedBy: Type.Optional(Type.String()),
+  sort: Type.Optional(Type.String()),
+  search: Type.Optional(Type.String()),
+  page: Type.Optional(Type.String()),
+  limit: Type.Optional(Type.String()),
+
+  deadLine: Type.Optional(Type.Any()),
+  createdAt: Type.Optional(Type.Any()),
+
+  deadLine_from: Type.Optional(Type.String()),
+  deadLine_to: Type.Optional(Type.String()),
+  created_from: Type.Optional(Type.String()),
+  created_to: Type.Optional(Type.String()),
 });
 
 export const TaskParamsSchema = Type.Object({
@@ -72,6 +86,9 @@ export const TaskSchema = Type.Object({
 
   tag: Type.Optional(Type.String()),
   workspace: Type.String(),
+
+  dependsOn: Type.Optional(Type.Array(Type.String())),
+  dependenciesList: Type.Optional(Type.Array(Type.Any())),
 
   createdBy: Type.Optional(Type.String()),
   updatedBy: Type.Optional(Type.String()),
