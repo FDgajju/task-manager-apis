@@ -12,6 +12,7 @@ import {
   type TaskQueryT,
   type TaskUpdateT,
 } from "./schema";
+import type { AggregateOptions, Sort } from "mongodb";
 
 export const createTask = async (
   req: FastifyRequest<{ Body: TaskCreateT }>,
@@ -63,7 +64,63 @@ export const getAllTasks = async (
     "createdBy",
   ]) as TaskQueryT;
 
-  const tasks = await db?.collection(TASK_COLLECTION).find(filter).toArray();
+  if (query.deadLine_from || query.deadLine_to) {
+    filter.deadLine = {};
+    if (query.deadLine_from) {
+      filter.deadLine.$gte = new Date(query.deadLine_from).toISOString();
+    }
+    if (query.deadLine_to) {
+      filter.deadLine.$lte = new Date(query.deadLine_to).toISOString();
+    }
+    // Remove deadLine filter if both are missing or invalid
+    if (Object.keys(filter.deadLine).length === 0) {
+      // biome-ignore lint/performance/noDelete: <explanation>
+      delete filter.deadLine;
+    }
+  }
+
+  if (query.created_from || query.created_to) {
+    filter.createdAt = {};
+    if (query.created_from) {
+      filter.createdAt.$gte = new Date(query.created_from).toISOString();
+    }
+    if (query.created_to) {
+      filter.createdAt.$lte = new Date(query.created_to).toISOString();
+    }
+    // Remove createdAt filter if both are missing or invalid
+    if (Object.keys(filter.createdAt).length === 0) {
+      // biome-ignore lint/performance/noDelete: <explanation>
+      delete filter.createdAt;
+    }
+  }
+
+  const sortOption: Sort = {};
+
+  sortOption.createdAt = query.sort === "1" ? 1 : -1;
+
+  console.log(filter, sortOption);
+
+  const pipeline = [
+    { $match: filter },
+    { $sort: sortOption },
+    {
+      $lookup: {
+        from: TASK_COLLECTION,
+        localField: "dependsOn",
+        foreignField: "_id",
+        as: "dependenciesList",
+      },
+    },
+  ];
+
+  const tasks = await db
+    ?.collection(TASK_COLLECTION)
+    .aggregate(pipeline)
+    .toArray();
+
+  // .find(filter)
+  // .sort(sortOption)
+  // .toArray();
 
   return reply.status(HTTP_STATUS.OK).send({
     status: true,
@@ -83,7 +140,23 @@ export const getOneTasks = async (
   if (!validObjectId(params.id)) throw new AppError("Invalid Task id!", 400);
 
   const filter = { _id: objectId(params.id) };
-  const task = await db?.collection(TASK_COLLECTION).findOne(filter);
+
+  const pipeline = [
+    { $match: filter },
+    {
+      $lookup: {
+        from: TASK_COLLECTION,
+        localField: "dependsOn",
+        foreignField: "_id",
+        as: "dependenciesList",
+      },
+    },
+  ];
+
+  const task = await db
+    ?.collection(TASK_COLLECTION)
+    .aggregate(pipeline)
+    .toArray();
 
   if (!task) {
     throw new AppError("Task not found", 404);
@@ -91,7 +164,7 @@ export const getOneTasks = async (
 
   return reply.status(HTTP_STATUS.OK).send({
     status: true,
-    data: task, // always Task object or null
+    data: task[0], // always Task object or null
     statusCode: HTTP_STATUS.OK,
     error: null,
   });
