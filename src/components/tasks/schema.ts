@@ -1,4 +1,5 @@
 import { type Static, type TSchema, Type } from "@sinclair/typebox";
+import type { ObjectId } from "mongodb";
 
 export enum TaskPriority {
   high = "high",
@@ -20,10 +21,10 @@ export const TaskCreateSchema = Type.Object({
   priority: Type.Enum(TaskPriority),
   status: Type.Enum(TaskStatus),
   deadLine: Type.String(),
-  
+
   workspace: Type.Optional(Type.String()),
   dependsOn: Type.Optional(Type.Array(Type.String())),
-  
+
   createdBy: Type.Optional(Type.String()),
 
   createdAt: Type.Optional(Type.String()),
@@ -39,7 +40,9 @@ export const TaskUpdateSchema = Type.Object({
   assignedTo: Type.Optional(Type.String()),
   attachments: Type.Optional(Type.Array(Type.String())),
   tag: Type.Optional(Type.String()),
-  dependsOn: Type.Optional(Type.Array(Type.String())),
+  dependsOn: Type.Optional(
+    Type.Array(Type.Unsafe<ObjectId>({ type: "string" }))
+  ),
 
   updatedAt: Type.Optional(Type.String()),
 });
@@ -60,11 +63,22 @@ export const TaskQuerySchema = Type.Object({
   updatedBy: Type.Optional(Type.String()),
   sort: Type.Optional(Type.String()),
   search: Type.Optional(Type.String()),
+
+  $or: Type.Optional(Type.Any()),
+  $nin: Type.Optional(Type.Any()),
+  $in: Type.Optional(Type.Any()),
+  _id: Type.Optional(Type.Any()),
+
   page: Type.Optional(Type.String()),
   limit: Type.Optional(Type.String()),
 
   deadLine: Type.Optional(Type.Any()),
   createdAt: Type.Optional(Type.Any()),
+
+  slug: Type.Optional(Type.String()),
+  ticket: Type.Optional(Type.String()),
+
+  exclude: Type.Optional(Type.String()),
 
   deadLine_from: Type.Optional(Type.String()),
   deadLine_to: Type.Optional(Type.String()),
@@ -77,8 +91,10 @@ export const TaskParamsSchema = Type.Object({
 });
 
 export const TaskSchema = Type.Object({
-  _id: Type.String(),
+  _id: Type.Unsafe<ObjectId>({ type: "string" }), // Accepts MongoDB ObjectId as string
   title: Type.String(),
+  slug: Type.Optional(Type.String()),
+  ticket: Type.Optional(Type.String()),
   description: Type.Optional(Type.String()),
   priority: Type.Enum(TaskPriority),
   status: Type.Enum(TaskStatus),

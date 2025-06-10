@@ -98,7 +98,14 @@ export const getAllTasks = async (
 
   sortOption.createdAt = query.sort === "1" ? 1 : -1;
 
-  console.log(filter, sortOption);
+  if (query.search) {
+    const searchRegex = new RegExp(query.search, "i");
+    filter.$or = [{ title: searchRegex }, { ticket: searchRegex }];
+  }
+
+  console.log(filter, query.exclude);
+  if (query.exclude)
+    filter._id = { $nin: query.exclude.split(",").map((id) => objectId(id)) };
 
   const pipeline = [
     { $match: filter },
@@ -178,19 +185,25 @@ export const updateTask = async (
 
   const { params, body } = req;
 
-  const data: TaskUpdateT = { ...body, updatedAt: new Date().toISOString() };
-
   if (!validObjectId(params.id)) throw new AppError("Invalid Task id!", 400);
 
+  const data = { ...body, updatedAt: new Date().toISOString() } as TaskUpdateT;
+
   const filter = { _id: objectId(params.id) };
+  console.log(data);
+
+  // uniquely converting to object id
+  if (data.dependsOn?.length) {
+    data.dependsOn = [
+      ...new Set(data.dependsOn.map((d) => objectId(String(d)))),
+    ];
+  }
 
   const task = await db
     ?.collection(TASK_COLLECTION)
     .findOneAndUpdate(filter, { $set: data }, { returnDocument: "after" });
 
   if (!task) throw new AppError("Task not found", 404);
-
-  console.log(task.value);
 
   return reply.status(HTTP_STATUS.OK).send({
     status: true,
