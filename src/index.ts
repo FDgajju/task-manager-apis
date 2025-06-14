@@ -3,18 +3,21 @@ import Fastify, { type FastifyInstance } from "fastify";
 import { registerRoutes } from "./components/registerRoutes.ts";
 import { MONGODB_URI, PORT } from "./constants/env.ts";
 import fastifyCors from "@fastify/cors";
+import { isProdEnvironment } from "./components/utils/isProd.ts";
 
 const app: FastifyInstance = Fastify({
-  logger: {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        colorized: true,
-        singleLine: true,
-        translateTime: "HH:MM:ss.l",
+  logger: isProdEnvironment()
+    ? true
+    : {
+        transport: {
+          target: "pino-pretty",
+          options: {
+            colorized: true,
+            singleLine: true,
+            translateTime: "HH:MM:ss.l",
+          },
+        },
       },
-    },
-  },
 });
 
 app.register(fastifyCors, {
