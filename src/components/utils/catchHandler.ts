@@ -3,7 +3,7 @@ import type {
 	FastifyRequest,
 	RouteGenericInterface,
 } from "fastify";
-import type { AnyType } from "../../types/types";
+import type { AnyType } from "../../types/types.ts";
 
 export const catchHandler =
 	<RouteGeneric extends RouteGenericInterface = RouteGenericInterface>(

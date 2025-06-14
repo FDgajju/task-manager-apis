@@ -1,4 +1,4 @@
-import type { AnyType } from "../../types/types";
+import type { AnyType } from "../../types/types.ts";
 
 /**
  * Utility class for filtering fields in data objects.

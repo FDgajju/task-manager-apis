@@ -1,6 +1,6 @@
 import type { FastifyInstance, FastifyPluginOptions } from "fastify";
-import { addDocument, getDocument, getSignedUrl } from "./controller";
-import { catchHandler } from "../utils/catchHandler";
+import { addDocument, getDocument, getSignedUrl } from "./controller.ts";
+import { catchHandler } from "../utils/catchHandler.ts";
 import multipart from "@fastify/multipart";
 
 export const documentRouter = async (

@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
-import { errorHandler } from "../middleware/errorHandler";
-import { taskRouter } from "./tasks/routes";
-import { documentRouter } from "./documents/router";
+import { errorHandler } from "../middleware/errorHandler.ts";
+import { taskRouter } from "./tasks/routes.ts";
+import { documentRouter } from "./documents/router.ts";
 
 export const registerRoutes = (app: FastifyInstance) => {
 	app.register(taskRouter, { prefix: "api" });

@@ -2,10 +2,10 @@ import fastifyMongoDB from "@fastify/mongodb";
 import Fastify from "fastify";
 import supertest from "supertest";
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
-import { registerRoutes } from "../components/registerRoutes";
-import { MONGODB_URI } from "../constants/env";
-import type { AnyType } from "../types/types";
-import { objectId } from "../components/utils/objectId";
+import { registerRoutes } from "../components/registerRoutes.ts";
+import { MONGODB_URI } from "../constants/env.ts";
+import type { AnyType } from "../types/types.ts";
+import { objectId } from "../components/utils/objectId.ts";
 
 let app: AnyType;
 let request: AnyType;

@@ -1,15 +1,15 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { genSignedDownloadUrl, uploadFile } from "../../lib/storageProvider";
-import { HTTP_STATUS } from "../../constants/HTTP_STATUS";
-import { AppError } from "../utils/AppError";
+import { genSignedDownloadUrl, uploadFile } from "../../lib/storageProvider.ts";
+import { HTTP_STATUS } from "../../constants/HTTP_STATUS.ts";
+import { AppError } from "../utils/AppError.ts";
 import {
   DOCUMENT_COLLECTION,
   TASK_COLLECTION,
-} from "../../constants/collectionNames";
-import type { DocumentT } from "./schema";
-import { objectId, validObjectId } from "../utils/objectId";
+} from "../../constants/collectionNames.ts";
+import type { DocumentT } from "./schema.ts";
+import { objectId, validObjectId } from "../utils/objectId.ts";
 import type { Db, ObjectId } from "mongodb";
-import { isDataExistInDb } from "../utils/checkData";
+import { isDataExistInDb } from "../utils/checkData.ts";
 
 export const addDocument = async (
   req: FastifyRequest<{ Body: { for: string } }>,

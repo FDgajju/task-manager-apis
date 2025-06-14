@@ -1,6 +1,6 @@
 import type { FastifyError, FastifyReply, FastifyRequest } from "fastify";
-import { AppError } from "../components/utils/AppError";
-import { HTTP_STATUS } from "../constants/HTTP_STATUS";
+import { AppError } from "../components/utils/AppError.ts";
+import { HTTP_STATUS } from "../constants/HTTP_STATUS.ts";
 
 const sendValidationError = (err: FastifyError, reply: FastifyReply) => {
 	return reply.status(HTTP_STATUS.BAD_REQUEST).send({

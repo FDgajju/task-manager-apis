@@ -10,8 +10,8 @@ import {
   R2_BUCKET_NAME,
   R2_SECRET_ACCESS_KEY,
   R2_SIGNED_URL_EXPIRY_TIME,
-} from "../constants/env";
-import type { AnyType } from "../types/types";
+} from "../constants/env.ts";
+import type { AnyType } from "../types/types.ts";
 
 const r2 = new S3Client({
   region: "auto",
@@ -52,7 +52,7 @@ export const genSignedDownloadUrl = async (fileName: string) => {
     const signedUrl = await getSignedUrl(r2, command, {
       expiresIn: R2_SIGNED_URL_EXPIRY_TIME,
     }); //in second
-    
+
     return { status: true, error: null, url: signedUrl };
   } catch (error) {
     return { status: false, error, data: null };

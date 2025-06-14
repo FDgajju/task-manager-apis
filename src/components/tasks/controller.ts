@@ -1,9 +1,9 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { HTTP_STATUS } from "../../constants/HTTP_STATUS";
-import { TASK_COLLECTION } from "../../constants/collectionNames";
-import { AppError } from "../utils/AppError";
-import { filterData } from "../utils/filterData";
-import { objectId, validObjectId } from "../utils/objectId";
+import { HTTP_STATUS } from "../../constants/HTTP_STATUS.ts";
+import { TASK_COLLECTION } from "../../constants/collectionNames.ts";
+import { AppError } from "../utils/AppError.ts";
+import { filterData } from "../utils/filterData.ts";
+import { objectId, validObjectId } from "../utils/objectId.ts";
 import {
   TaskPriority,
   TaskStatus,
@@ -11,7 +11,7 @@ import {
   type TaskParamsT,
   type TaskQueryT,
   type TaskUpdateT,
-} from "./schema";
+} from "./schema.ts";
 import type { Sort } from "mongodb";
 
 export const createTask = async (

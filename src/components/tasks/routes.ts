@@ -5,9 +5,9 @@ import {
 	getAllTasks,
 	getOneTasks,
 	updateTask,
-} from "./controller";
+} from "./controller.ts";
 
-import { catchHandler } from "../utils/catchHandler";
+import { catchHandler } from "../utils/catchHandler.ts";
 import {
 	TaskCreateSchema,
 	TaskFailedResponseSchema,
@@ -15,7 +15,7 @@ import {
 	TaskParamsSchema,
 	TaskQuerySchema,
 	TaskSingleResponseSchema,
-} from "./schema";
+} from "./schema.ts";
 import type {
 	TaskCreateT,
 	TaskParamsT,

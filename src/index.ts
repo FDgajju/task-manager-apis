@@ -1,7 +1,7 @@
 import fastifyMongoDB from "@fastify/mongodb";
 import Fastify, { type FastifyInstance } from "fastify";
-import { registerRoutes } from "./components/registerRoutes";
-import { MONGODB_URI, PORT } from "./constants/env";
+import { registerRoutes } from "./components/registerRoutes.ts";
+import { MONGODB_URI, PORT } from "./constants/env.ts";
 import fastifyCors from "@fastify/cors";
 
 const app: FastifyInstance = Fastify({

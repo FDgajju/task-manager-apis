@@ -1,6 +1,6 @@
 import fastifyMongoDB from "@fastify/mongodb";
-import { MONGODB_URI } from "../constants/env";
-import type { AnyType } from "../types/types";
+import { MONGODB_URI } from "../constants/env.ts";
+import type { AnyType } from "../types/types.ts";
 
 export const registerMongodb = async (server: AnyType) => {
 	try {
