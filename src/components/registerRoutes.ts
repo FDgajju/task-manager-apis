@@ -1,9 +1,11 @@
 import type { FastifyInstance } from "fastify";
 import { errorHandler } from "../middleware/errorHandler";
 import { taskRouter } from "./tasks/routes";
+import { documentRouter } from "./documents/router";
 
 export const registerRoutes = (app: FastifyInstance) => {
 	app.register(taskRouter, { prefix: "api" });
+	app.register(documentRouter, { prefix: "api" });
 
 	app.setNotFoundHandler((req, reply) => {
 		reply.status(404).send({

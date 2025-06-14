@@ -12,7 +12,7 @@ import {
   type TaskQueryT,
   type TaskUpdateT,
 } from "./schema";
-import type { AggregateOptions, Sort } from "mongodb";
+import type { Sort } from "mongodb";
 
 export const createTask = async (
   req: FastifyRequest<{ Body: TaskCreateT }>,
@@ -32,7 +32,7 @@ export const createTask = async (
 
   const task = await db?.collection(TASK_COLLECTION).insertOne(data);
 
-  if (!task?.insertedId) throw new AppError("Document Creation Failed");
+  if (!task?.insertedId) throw new AppError("Task Creation Failed");
 
   return reply.status(HTTP_STATUS.CREATED).send({
     status: true,
