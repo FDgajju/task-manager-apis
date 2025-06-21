@@ -1,4 +1,5 @@
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -56,5 +57,20 @@ export const genSignedDownloadUrl = async (fileName: string) => {
     return { status: true, error: null, url: signedUrl };
   } catch (error) {
     return { status: false, error, data: null };
+  }
+};
+
+export const removeFile = async (filename: string) => {
+  try {
+    const params = {
+      Bucket: R2_BUCKET_NAME,
+      Key: filename,
+    };
+
+    const command = new DeleteObjectCommand(params);
+    const info = await r2.send(command);
+    return { status: true, error: null, data: info };
+  } catch (error) {
+    return { status: false, error: error, data: null };
   }
 };
