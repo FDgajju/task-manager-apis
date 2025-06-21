@@ -1,5 +1,9 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
-import { genSignedDownloadUrl, uploadFile } from "../../lib/storageProvider.ts";
+import {
+  genSignedDownloadUrl,
+  removeFile,
+  uploadFile,
+} from "../../lib/storageProvider.ts";
 import { HTTP_STATUS } from "../../constants/HTTP_STATUS.ts";
 import { AppError } from "../utils/AppError.ts";
 import {
@@ -55,6 +59,8 @@ export const addDocument = async (
       path: uploadResp.data.filename,
       type: fileData?.mimetype,
       url: "",
+      createdAt: new Date(Date.now()).toISOString(),
+      updatedAt: new Date(Date.now()).toISOString(),
     };
   } else {
     throw new AppError("Upload failed: No data returned from uploadFile.");
@@ -125,6 +131,48 @@ export const getSignedUrl = async (
     status: true,
     statusCode: HTTP_STATUS.OK,
     data: { url: data.url },
+    error: null,
+  });
+};
+
+export const deleteDocument = async (
+  req: FastifyRequest<{ Params: { id: string } }>,
+  reply: FastifyReply
+) => {
+  const db = req.server.mongo.db;
+  const { id } = req.params;
+
+  const filter: Record<string, string | OID> = {};
+
+  if (validObjectId(id)) {
+    filter._id = objectId(id);
+  } else {
+    throw new AppError("Invalid document id", HTTP_STATUS.BAD_REQUEST);
+  }
+
+  const document = await db?.collection(DOCUMENT_COLLECTION).findOne(filter);
+
+  if (!document)
+    throw new AppError("File does not exists", HTTP_STATUS.NOT_FOUND);
+
+  const task = await db
+    ?.collection(TASK_COLLECTION)
+    .findOneAndUpdate(
+      { attachments: filter._id },
+      { $pull: { attachments: filter._id } as AnyType },
+      { returnDocument: "after" }
+    );
+
+  const deleteInfo = await removeFile(document.name);
+
+  if (deleteInfo.error) throw new AppError(deleteInfo.error);
+
+  const resp = await db?.collection(DOCUMENT_COLLECTION).deleteOne(filter);
+
+  return reply.status(HTTP_STATUS.OK).send({
+    status: true,
+    data: resp,
+    statusCode: HTTP_STATUS.OK,
     error: null,
   });
 };
