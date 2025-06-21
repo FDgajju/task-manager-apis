@@ -10,32 +10,31 @@ import type { DocumentT } from "./schema.ts";
 import { objectId, validObjectId } from "../utils/objectId.ts";
 import type { Db, ObjectId } from "mongodb";
 import { isDataExistInDb } from "../utils/checkData.ts";
+import type { AnyType, OID } from "../../types/types.ts";
 
 export const addDocument = async (
-  req: FastifyRequest<{ Body: { for: string } }>,
+  req: FastifyRequest<{ Body: { for: AnyType; document: AnyType } }>,
   reply: FastifyReply
 ) => {
   const db = req.server.mongo.db;
   const client = req.server.mongo.client;
 
-// not getting this body 
+  // not getting this body
   const { body } = req;
-  const fileData = await req.file();
+  const fileData = await body.document;
 
+  const taskId = body?.for?.value;
+  // console.log(body);
 
-  console.log(fileData)
-
-  if (body?.for)
+  if (!taskId)
     throw new AppError("Please specify task", HTTP_STATUS.BAD_REQUEST);
 
-  if (!!body?.for && !validObjectId(body.for))
+  if (!!taskId && !validObjectId(taskId as string))
     throw new AppError("Not a valid task id", HTTP_STATUS.BAD_REQUEST);
 
-  if (!isDataExistInDb(db as Db, DOCUMENT_COLLECTION, body?.for)) {
+  if (!isDataExistInDb(db as Db, DOCUMENT_COLLECTION, taskId as string)) {
     throw new AppError("The task dose not exists", HTTP_STATUS.BAD_REQUEST);
   }
-
-  console.log(body?.for)
 
   const filebuffer = await fileData?.toBuffer();
 
@@ -51,6 +50,7 @@ export const addDocument = async (
   let payload: DocumentT | undefined;
   if (uploadResp.data) {
     payload = {
+      originalname: file.originalname,
       name: uploadResp.data.filename,
       path: uploadResp.data.filename,
       type: fileData?.mimetype,
@@ -60,22 +60,20 @@ export const addDocument = async (
     throw new AppError("Upload failed: No data returned from uploadFile.");
   }
 
-  const session = client.startSession();
   const document = await db?.collection(DOCUMENT_COLLECTION).insertOne(payload);
 
   if (!document?.insertedId) {
-    session.abortTransaction();
     throw new AppError("Document Creation Failed");
   }
 
-  await db
-    ?.collection(TASK_COLLECTION)
-    .updateOne(
-      { _id: objectId(body?.for) },
-      { $set: { $push: { attachments: document.insertedId } } }
-    );
-
-  session.endSession();
+  if (document.insertedId) {
+    await db
+      ?.collection(TASK_COLLECTION)
+      .findOneAndUpdate(
+        { _id: objectId(taskId) },
+        { $push: { attachments: document.insertedId as AnyType } }
+      );
+  }
 
   return reply.status(HTTP_STATUS.OK).send({
     status: true,
