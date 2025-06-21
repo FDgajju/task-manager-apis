@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyPluginOptions } from "fastify";
-import { addDocument, getDocument, getSignedUrl } from "./controller.ts";
+import { addDocument, getDocument, getSignedUrl,  deleteDocument } from "./controller.ts";
 import { catchHandler } from "../utils/catchHandler.ts";
 import multipart from "@fastify/multipart";
 
@@ -17,4 +17,5 @@ export const documentRouter = async (
   //
   fastify.post("/document/url", catchHandler(getSignedUrl));
   fastify.get("/document/:id", catchHandler(getDocument));
+  fastify.delete("/document/:id", catchHandler(deleteDocument))
 };
