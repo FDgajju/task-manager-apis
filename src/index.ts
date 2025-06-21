@@ -23,6 +23,7 @@ const app: FastifyInstance = Fastify({
 app.register(fastifyCors, {
   origin: "*",
   methods: ["POST", "PATCH", "GET", "DELETE"],
+  allowedHeaders: ["*"],
 });
 
 app.get("/api/health", () => {
