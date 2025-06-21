@@ -8,7 +8,10 @@ export const documentRouter = async (
   _opts: FastifyPluginOptions
 ) => {
   await fastify.register(async (supFastify) => {
-    await supFastify.register(multipart, { limits: { fileSize: 1_04_85_760 } }); //10mb
+    await supFastify.register(multipart, {
+      limits: { fileSize: 1_04_85_760 },
+      attachFieldsToBody: true,
+    }); //10mb
     supFastify.post("/document", catchHandler(addDocument));
   });
   //
