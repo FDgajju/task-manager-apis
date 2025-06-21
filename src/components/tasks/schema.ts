@@ -105,6 +105,7 @@ export const TaskSchema = Type.Object({
 
   dependsOn: Type.Optional(Type.Array(Type.String())),
   dependenciesList: Type.Optional(Type.Array(Type.Any())),
+  attachedDocuments: Type.Optional(Type.Array(Type.Any())),
 
   createdBy: Type.Optional(Type.String()),
   updatedBy: Type.Optional(Type.String()),
@@ -112,7 +113,7 @@ export const TaskSchema = Type.Object({
   assignedBy: Type.Optional(Type.String()),
   comments: Type.Optional(Type.Array(Type.String())),
   attachments: Type.Optional(Type.Array(Type.String())),
-
+    
   createdAt: Type.Optional(Type.String()),
   updatedAt: Type.Optional(Type.String()),
 });
