@@ -1,7 +1,7 @@
 import fastifyMongoDB from "@fastify/mongodb";
 import Fastify, { type FastifyInstance } from "fastify";
 import { registerRoutes } from "./components/registerRoutes.ts";
-import { MONGODB_URI, PORT } from "./constants/env.ts";
+import { ALLOWED_ORIGINS, MONGODB_URI, PORT } from "./constants/env.ts";
 import fastifyCors from "@fastify/cors";
 import { isProdEnvironment } from "./components/utils/isProd.ts";
 
@@ -21,7 +21,7 @@ const app: FastifyInstance = Fastify({
 });
 
 app.register(fastifyCors, {
-  origin: "*",
+  origin: ALLOWED_ORIGINS,
   methods: ["POST", "PATCH", "GET", "DELETE"],
   allowedHeaders: ["*"],
 });

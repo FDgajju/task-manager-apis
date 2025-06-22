@@ -18,3 +18,7 @@ export const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME as string;
 export const R2_SIGNED_URL_EXPIRY_TIME = Number.parseInt(
   process.env.R2_SIGNED_URL_EXPIRY_TIME || "300"
 );
+
+export const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGIN
+  ? process.env.ALLOWED_ORIGIN?.split(",")
+  : "*";
