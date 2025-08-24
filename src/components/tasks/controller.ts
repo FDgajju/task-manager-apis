@@ -106,7 +106,6 @@ export const getAllTasks = async (
     filter.$or = [{ title: searchRegex }, { ticket: searchRegex }];
   }
 
-  console.log(filter, query.exclude);
   if (query.exclude)
     filter._id = { $nin: query.exclude.split(",").map((id) => objectId(id)) };
 

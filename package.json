@@ -14,6 +14,8 @@
     "@fastify/multipart": "^9.0.3",
     "@sinclair/typebox": "^0.34.33",
     "fastify": "^5.3.3",
+    "node-cache": "^5.1.2",
+    "nodemailer": "^7.0.5",
     "pino-pretty": "^13.0.0"
   },
   "scripts": {
@@ -26,6 +28,7 @@
     "@biomejs/biome": "1.9.4",
     "@types/mongodb": "^4.0.6",
     "@types/node": "^22.15.21",
+    "@types/nodemailer": "^7.0.1",
     "@types/supertest": "^6.0.3",
     "dotenv": "^16.5.0",
     "supertest": "^7.1.1",

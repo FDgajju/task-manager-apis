@@ -19,6 +19,15 @@ export const R2_SIGNED_URL_EXPIRY_TIME = Number.parseInt(
   process.env.R2_SIGNED_URL_EXPIRY_TIME || "300"
 );
 
+export const NODE_MAILER_USER = process.env.NODE_MAILER_USER as string;
+export const NODE_MAILER_PASS = process.env.NODE_MAILER_PASS as string;
+export const NODE_MAILER_SMTP_HOST = process.env
+  .NODE_MAILER_SMTP_HOST as string;
+export const NODE_MAILER_SMTP_PORT = process.env
+  .NODE_MAILER_SMTP_PORT as string;
+export const NODE_MAILER_SENDER_EMAIL = process.env
+  .NODE_MAILER_SENDER_EMAIL as string;
+
 export const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGIN
   ? process.env.ALLOWED_ORIGIN?.split(",")
   : "*";
